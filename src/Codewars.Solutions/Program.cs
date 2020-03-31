@@ -14,7 +14,7 @@ namespace Codewars.Solutions
 
         static void Run()
         {
-            var task = new NextSmallerNumber();
+            var task = new SimpleAssemblerIntepreter();
             var result = task.Run();
 
             Console.WriteLine(task.Rank);
