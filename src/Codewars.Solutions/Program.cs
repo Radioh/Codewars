@@ -14,7 +14,7 @@ namespace Codewars.Solutions
 
         static void Run()
         {
-            var task = new StopgninnipSMysdroW();
+            var task = new NextBiggerNumber();
             var result = task.Run();
 
             Console.WriteLine(task.Rank);
