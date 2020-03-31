@@ -5,40 +5,40 @@ using Codewars.Solutions.Core;
 
 namespace Codewars.Solutions.Tasks
 {
-    public class NextBiggerNumber : ITask
+    public class NextSmallerNumber : ITask
     {
-        public string Name => "Next bigger number with the same digits";
+        public string Name => "Next smaller number with the same digits";
         public string Rank => "4 Kuy";
-        public string Description => "You have to create a function that takes a positive integer number "
-            + "and returns the next bigger number formed by the same digits:";
-        public string Link => "https://www.codewars.com/kata/55983863da40caa2c900004e";
+        public string Description => "Write a function that takes a positive integer and returns the next smaller positive integer containing the same digits.";
+        public string Link => "https://www.codewars.com/kata/5659c6d896bc135c4c00021e";
 
         public string Run()
         {
             var cases = new long[]
             {
-                12,
+                21,
+                907,
+                531,
+                9,
+                441,
+                123456798,
                 111,
-                513,
-                2017,
-                5843,
-                1234,
-                218765,
-                534976
+                1027,
+                29009
             };
 
             var results = new StringBuilder();
 
             foreach (var testCase in cases)
             {
-                var result = NextBiggerNumberWithSameDigits(testCase);
+                var result = NextSmallerNumberWithSameDigits(testCase);
                 results.Append($"{testCase} -> {result} \n");
             }
 
             return results.ToString();
         }
 
-        private long NextBiggerNumberWithSameDigits(long input)
+        private long NextSmallerNumberWithSameDigits(long input)
         { 
             var digits = input.ToString()
                 .Select(x => Convert.ToInt64(x.ToString()))
@@ -46,7 +46,7 @@ namespace Codewars.Solutions.Tasks
 
             var lft = -1;
             for (var i = digits.Count() - 1; i > 0; i--) 
-                if (lft == -1 && digits[i] > digits[i - 1]) 
+                if (lft == -1 && digits[i] < digits[i - 1]) 
                     lft = i - 1;
 
             if (lft == -1)
@@ -55,7 +55,7 @@ namespace Codewars.Solutions.Tasks
             var rgt = lft + 1;
             var lftDigit = digits[lft];
             for (int i = lft + 1; i < digits.Count(); i++) 
-                if (digits[rgt] > digits[i] && digits[i] > lftDigit)
+                if (digits[rgt] < digits[i] && digits[i] < lftDigit)
                     rgt = i;
 
             var tmp = digits[lft];
@@ -63,8 +63,11 @@ namespace Codewars.Solutions.Tasks
             digits[rgt] = tmp;
 
             var untilSwap = digits.Take(lft + 1).ToList();
-            var ordered = digits.Skip(lft + 1).OrderBy(x => x).ToList();
+            var ordered = digits.Skip(lft + 1).OrderByDescending(x => x).ToList();
             untilSwap.AddRange(ordered);
+
+            if (untilSwap[0] == 0)
+                return -1;
             
             return long.Parse(string.Join("", untilSwap));
         }
