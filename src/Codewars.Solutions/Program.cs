@@ -19,7 +19,6 @@ namespace Codewars.Solutions
 
             Console.WriteLine(task.Rank);
             Console.WriteLine(task.Name);
-            Console.WriteLine(task.Description);
             Console.WriteLine(task.Link);
             Console.WriteLine();
             Console.WriteLine("Result: \n" + result);
