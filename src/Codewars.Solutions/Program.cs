@@ -14,7 +14,7 @@ namespace Codewars.Solutions
 
         static void Run()
         {
-            var task = new Snail();
+            var task = new HumanReadableDurationFormat();
             var result = task.Run();
 
             Console.WriteLine(task.Rank);
