@@ -14,7 +14,7 @@ namespace Codewars.Solutions
 
         static void Run()
         {
-            var task = new SudokuValidator();
+            var task = new Calculator();
             var result = task.Run();
 
             Console.WriteLine(task.Rank);
