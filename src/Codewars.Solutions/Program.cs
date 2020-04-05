@@ -14,7 +14,7 @@ namespace Codewars.Solutions
 
         static void Run()
         {
-            var task = new Calculator();
+            var task = new TheObservedPin();
             var result = task.Run();
 
             Console.WriteLine(task.Rank);
