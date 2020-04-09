@@ -4,7 +4,6 @@
     {
         string Name { get; }
         string Rank { get; }
-        string Link { get; }
 
         string Run();
     }

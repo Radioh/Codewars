@@ -9,12 +9,12 @@ namespace Codewars.Solutions.Tasks
     /// Next bigger number with the same digits
     /// You have to create a function that takes a positive integer number
     /// and returns the next bigger number formed by the same digits
+    /// https://www.codewars.com/kata/55983863da40caa2c900004e
     /// </summary>
     public class NextBiggerNumber : ITask
     {
         public string Name => "Next bigger number with the same digits";
         public string Rank => "4 Kuy";
-        public string Link => "https://www.codewars.com/kata/55983863da40caa2c900004e";
 
         public string Run()
         {

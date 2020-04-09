@@ -13,12 +13,12 @@ namespace Codewars.Solutions.Tasks
     /// dec x - decreases the content of the register x by one
     /// jnz x y - jumps to an instruction y steps away (positive means forward, negative means backward),
     /// but only if x (a constant or a register) is not zero
+    /// https://www.codewars.com/kata/58e24788e24ddee28e000053
     /// </summary>
     public class SimpleAssemblerIntepreter : ITask
     {
         public string Name => "Simple assembler interpreter";
         public string Rank => "5 Kuy";
-        public string Link => "https://www.codewars.com/kata/58e24788e24ddee28e000053";
 
         public string Run()
         {

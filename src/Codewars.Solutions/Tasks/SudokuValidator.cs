@@ -11,13 +11,13 @@ namespace Codewars.Solutions.Tasks
     /// that accepts a 2D array representing a Sudoku board, and returns true if it is a valid solution, 
     /// or false otherwise. The cells of the sudoku board may also contain 0's, 
     /// which will represent empty cells. 
-    ///Boards containing one or more zeroes are considered to be invalid solutions.
+    /// Boards containing one or more zeroes are considered to be invalid solutions.
+    ///https://www.codewars.com/kata/529bf0e9bdf7657179000008
     /// </summary>
     public class SudokuValidator : ITask
     {
         public string Name => "Sudoku Validator";
         public string Rank => "4 Kuy";
-        public string Link => "https://www.codewars.com/kata/529bf0e9bdf7657179000008";
 
         public string Run()
         {

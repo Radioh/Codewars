@@ -9,12 +9,12 @@ namespace Codewars.Solutions.Tasks
     /// Twice Linear
     /// Given parameter n the function dbl_linear (or dblLinear...)
     /// returns the element u(n) of the ordered (with <) sequence u (so, there are no duplicates).
+    /// https://www.codewars.com/kata/5672682212c8ecf83e000050
     /// </summary>
     public class TwiceLinear : ITask
     {
         public string Name => "Twice Linear";
         public string Rank => "4 Kuy";
-        public string Link => "https://www.codewars.com/kata/5672682212c8ecf83e000050";
 
         public string Run()
         {

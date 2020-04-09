@@ -10,12 +10,12 @@ namespace Codewars.Solutions.Tasks
     /// given as a number of seconds, in a human-friendly way.
     /// The function must accept a non-negative integer.If it is zero, it just returns "now".
     /// Otherwise, the duration is expressed as a combination of years, days, hours, minutes and seconds.
+    /// https://www.codewars.com/kata/52742f58faf5485cae000b9a
     /// </summary>
     public class HumanReadableDurationFormat : ITask
     {
         public string Name => "Human Readable Duration Format";
         public string Rank => "4 Kuy";
-        public string Link => "https://www.codewars.com/kata/52742f58faf5485cae000b9a";
 
         public string Run()
         {

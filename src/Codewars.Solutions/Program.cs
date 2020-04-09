@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Codewars.Solutions.Core;
 using Codewars.Solutions.Tasks;
 
 namespace Codewars.Solutions
@@ -7,21 +9,23 @@ namespace Codewars.Solutions
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Codewars... \n\n");
+            Console.WriteLine("CodeWars...");
 
-            Run();
+            var solved = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => typeof(ITask).IsAssignableFrom(x) && !x.IsInterface);
+
+            Console.WriteLine($"Solved {solved.Count()} tasks\n");
+
+            RunWorkspace();
         }
 
-        static void Run()
+        static void RunWorkspace()
         {
             var task = new StringsMix();
-            var result = task.Run();
 
-            Console.WriteLine(task.Rank);
-            Console.WriteLine(task.Name);
-            Console.WriteLine(task.Link);
-            Console.WriteLine();
-            Console.WriteLine("Result: \n" + result);
+            Console.WriteLine($"Workspace --> {task.Name} : {task.Rank}\n");
+            Console.WriteLine("Result: \n" + task.Run());
         }
     }
 }

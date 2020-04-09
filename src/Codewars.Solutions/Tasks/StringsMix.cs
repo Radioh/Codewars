@@ -9,12 +9,12 @@ namespace Codewars.Solutions.Tasks
     /// <summary>
     /// Strings Mix
     /// Given two strings s1 and s2, we want to visualize how different the two strings are. We will only take into account the lowercase letters (a to z).
+    /// https://www.codewars.com/kata/5629db57620258aa9d000014
     /// </summary>
     public class StringsMix : ITask
     {
         public string Name => "Strings Mix";
         public string Rank => "4 Kuy";
-        public string Link => "https://www.codewars.com/kata/5629db57620258aa9d000014";
 
         public string Run()
         {
