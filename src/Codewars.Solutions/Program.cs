@@ -14,7 +14,7 @@ namespace Codewars.Solutions
 
         static void Run()
         {
-            var task = new TwiceLinear();
+            var task = new StringsMix();
             var result = task.Run();
 
             Console.WriteLine(task.Rank);
