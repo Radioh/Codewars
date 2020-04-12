@@ -22,7 +22,7 @@ namespace Codewars.Solutions
 
         static void RunWorkspace()
         {
-            var task = new BattleshipFieldValidator();
+            var task = new RangeExtraction();
 
             Console.WriteLine($"Workspace --> {task.Name} : {task.Rank}\n");
             Console.WriteLine("Result: \n" + task.Run());
