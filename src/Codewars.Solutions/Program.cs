@@ -22,7 +22,7 @@ namespace Codewars.Solutions
 
         static void RunWorkspace()
         {
-            var task = new RgbToHexConversion();
+            var task = new RailFenceCipher();
 
             Console.WriteLine($"Workspace --> {task.Name} : {task.Rank}\n");
             Console.WriteLine("Result: \n" + task.Run());
