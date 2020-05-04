@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Codewars.Solutions.Core;
 
@@ -15,14 +15,37 @@ namespace Codewars.Solutions.Tasks
 
         public string Run()
         {
-            var track = "";
+            var track = @"                                
+                                /------------\
+/-------------\                /             |
+|             |               /              S
+|             |              /               |
+|        /----+--------------+------\        |
+\       /     |              |      |        |      
+ \      |     \              |      |        |
+ |      |      \-------------+------+--------+---\            
+ |      |                    |      |        |   |
+ \------+------S-------------+------/        /   |
+        |                    |              /    |
+        \--------------------+-------------/     |
+                             |                   |
+/-------------\              |                   |        
+|             |              |             /-----+----\      
+|             |              |             |     |     \    
+\-------------+--------------+-----S-------+-----/      \   
+              |              |             |             \
+              |              |             |             |
+              |              \-------------+-------------/
+              |                            |
+              \----------------------------/";
+
             var aTrain = "Aaaa";
             var aTrainPos = 147;
             var bTrain = "Bbbbbbbbbbb";
             var bTrainPos = 288;
             var limit = 1000;
 
-            var result = TrainCrash(track, aTrain, aTrainPos, bTrain, bTrainPos, limit);
+            var result = TrainCrash(track.Substring(1), aTrain, aTrainPos, bTrain, bTrainPos, limit);
             return $"TrainCrash() -> {result} \n";
         }
 
@@ -35,33 +58,72 @@ namespace Codewars.Solutions.Tasks
             var trainA = new Train(aTrain, parsedTrack.Length);
             var trainB = new Train(bTrain, parsedTrack.Length);
             OverwriteStartingPos(parsedTrack, trainA, trainB);
-            
-            while(turns != limit) 
+
+            if (trainA.HasCollidedWith(trainB))
+                return 0;
+
+            while (turns != limit) 
             {
                 MoveTurn(parsedTrack, trainA);
                 MoveTurn(parsedTrack, trainB);
+                turns++;
 
                 if (trainA.HasCollidedWith(trainB))
-                    break;
-
-                turns++;
+                    return turns;
             }
 
-            if (turns == limit)
-                return -1;
-
-            if (turns == 0)
-                return 0;
-
-            return turns;
+            return -1;
         }
 
         private static string[] ParseTrack(string track, int aPos, int bPos) 
         {
-            return Array.Empty<string>();
+            var trackArray = new List<string[]>();
 
-            // traverse og indsæt "A" sammen med skinne type på position
-            // samme med b 
+            foreach (var line in track.Split("\n"))
+                trackArray.Add(line.Split());
+
+            var count = 0;
+            var x = 0;
+            var y = 0;
+            var traverse = true;
+            var traversedTrack = new List<string>();
+
+            while(traverse)
+            {
+                var current = trackArray[y][x];
+                
+                // find ud af næste y,x
+                // corner cases som skal parses
+                switch (current)
+                {
+                    case "|":
+                        break;
+                    case "\\":
+                        break;
+                    case "/":
+                        break;
+                    case "+":
+                        break;
+                    case "X":
+                        break;
+                    case "S":
+                        break;
+                    default:
+                        continue;
+                }
+
+
+                if (count == aPos)
+                    current = "A" + current;
+                if (count == bPos)
+                    current = "B" + current;
+
+                count++;
+                traversedTrack.Add(current);
+
+            }
+
+            return traversedTrack.ToArray();
         }
 
         private static void OverwriteStartingPos(string[] parsedTrack, Train trainA, Train trainB) 
