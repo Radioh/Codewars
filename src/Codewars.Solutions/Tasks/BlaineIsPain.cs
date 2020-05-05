@@ -85,33 +85,146 @@ namespace Codewars.Solutions.Tasks
             var count = 0;
             var x = 0;
             var y = 0;
+            var dir = Direction.Right;
             var traverse = true;
+            var last = "";
             var traversedTrack = new List<string>();
 
+            // todo stop when reached start coords
+            // todo handle curves - use mem
             while(traverse)
             {
                 var current = trackArray[y][x];
                 
-                // find ud af næste y,x
-                // corner cases som skal parses
                 switch (current)
                 {
+                    case "-":
+                        if (dir == Direction.Left)
+                            x--;
+                        else
+                            x++;
+                        break;
+
                     case "|":
+                        if (dir == Direction.Down)
+                            y++;
+                        else if (dir == Direction.Up)
+                            y--;
                         break;
+
                     case "\\":
+                        if (dir == Direction.Right)
+                        {
+                            dir = Direction.Down;
+                            y++;
+                        }
+                        else if (dir == Direction.Left)
+                        {
+                            dir = Direction.Up;
+                            y--;
+                        }
+                        else if (dir == Direction.Down)
+                        {
+                            dir = Direction.Right;
+                            x++;
+                        }
+                        else if (dir == Direction.Up)
+                        {
+                            dir = Direction.Left;
+                            x--;
+                        }
                         break;
+
                     case "/":
+                        if (dir == Direction.Right)
+                        {
+                            dir = Direction.Up;                            
+                            y--;
+                        }
+                        else if (dir == Direction.Left)
+                        {
+                            dir = Direction.Down;
+                            y++;
+                        }
+                        else if (dir == Direction.Down)
+                        {
+                            dir = Direction.Left;
+                            x--;
+                        }
+                        else if (dir == Direction.Up)
+                        {
+                            dir = Direction.Right;
+                            x++;
+                        }
                         break;
+
                     case "+":
+                        if (dir == Direction.Down)
+                            y++;
+                        else if (dir == Direction.Up)
+                            y--;
+                        else if (dir == Direction.Left)
+                            x--;
+                        else if (dir == Direction.Right)
+                            x++;
                         break;
+
                     case "X":
+                        if (dir == Direction.DownLeft)
+                        {
+                            x--;
+                            y++;
+                        }
+                        else if (dir == Direction.DownRight)
+                        {
+                            x++;
+                            y++;
+                        }
+                        else if (dir == Direction.UpLeft)
+                        {
+                            x--;
+                            y--;
+                        }
+                        else if (dir == Direction.UpRight)
+                        {
+                            x++;
+                            y--;
+                        }
                         break;
+
                     case "S":
+                        if (dir == Direction.Down)
+                            y++;
+                        else if (dir == Direction.Up)
+                            y--;
+                        else if (dir == Direction.Left)
+                            x--;
+                        else if (dir == Direction.Right)
+                            x++;
+                        if (dir == Direction.DownLeft)
+                        {
+                            x--;
+                            y++;
+                        }
+                        else if (dir == Direction.DownRight)
+                        {
+                            x++;
+                            y++;
+                        }
+                        else if (dir == Direction.UpLeft)
+                        {
+                            x--;
+                            y--;
+                        }
+                        else if (dir == Direction.UpRight)
+                        {
+                            x++;
+                            y--;
+                        }
                         break;
                     default:
                         continue;
                 }
-
 
                 if (count == aPos)
                     current = "A" + current;
@@ -119,8 +232,8 @@ namespace Codewars.Solutions.Tasks
                     current = "B" + current;
 
                 count++;
+                last = current;
                 traversedTrack.Add(current);
-
             }
 
             return traversedTrack.ToArray();
@@ -153,6 +266,11 @@ namespace Codewars.Solutions.Tasks
                 train.ReachStation();
         }
         
+        public enum Direction
+        {
+            Up, Down, Left, Right, UpRight, UpLeft, DownRight, DownLeft
+        }
+
         public class Train 
         {
             public string _layout;
