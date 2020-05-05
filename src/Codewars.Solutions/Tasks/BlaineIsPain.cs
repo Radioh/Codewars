@@ -87,14 +87,15 @@ namespace Codewars.Solutions.Tasks
             var y = 0;
             var dir = Direction.Right;
             var traverse = true;
+            var start = (-1, -1);
             var last = "";
             var traversedTrack = new List<string>();
 
-            // todo stop when reached start coords
             // todo handle curves - use mem
             while(traverse)
             {
                 var current = trackArray[y][x];
+                var snap = (y, x);
                 
                 switch (current)
                 {
@@ -228,8 +229,15 @@ namespace Codewars.Solutions.Tasks
 
                 if (count == aPos)
                     current = "A" + current;
+
                 if (count == bPos)
                     current = "B" + current;
+
+                if (start == (-1, -1))
+                    start = snap;
+
+                if (start == (y, x))
+                    traverse = false;
 
                 count++;
                 last = current;
