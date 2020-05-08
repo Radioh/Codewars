@@ -41,9 +41,9 @@ namespace Codewars.Solutions.Tasks
 
             var aTrain = "Aaaa";
             var aTrainPos = 147;
-            var bTrain = "Bbbbbbbbbbb";
+            var bTrain = "bbbbbbbbbbB";
             var bTrainPos = 288;
-            var limit = 1000;
+            var limit = 2000;
 
             var result = TrainCrash(track, aTrain, aTrainPos, bTrain, bTrainPos, limit);
             return $"TrainCrash() -> {result} \n";
@@ -55,9 +55,9 @@ namespace Codewars.Solutions.Tasks
             var parsedTrack = ParseTrack(track, aTrainPos, bTrainPos);
             
             var turns = 0;
-            var trainA = new Train(aTrain, parsedTrack.Length);
-            var trainB = new Train(bTrain, parsedTrack.Length);
-            OverwriteStartingPos(parsedTrack, trainA, trainB);
+            var trainA = new Train(aTrain, parsedTrack.Length, aTrainPos);
+            var trainB = new Train(bTrain, parsedTrack.Length, bTrainPos);
+            //OverwriteStartingPos(parsedTrack, trainA, trainB);
 
             if (trainA.HasCollidedWith(trainB))
                 return 0;
@@ -82,7 +82,7 @@ namespace Codewars.Solutions.Tasks
             foreach (var line in track.Split(System.Environment.NewLine))
                 trackArray.Add(line.Select(x => x.ToString()).ToArray());
 
-            var count = 0;
+            //var count = 0;
             var x = 0;
             var y = 0;
             var dir = Direction.Right;
@@ -130,13 +130,19 @@ namespace Codewars.Solutions.Tasks
                         }
                         else if (dir == Direction.Down || dir == Direction.DownRight)
                         {
-                            if (InBounds(y + 1, x + 1, trackArray) && trackArray[y + 1][x + 1].Contains("\\"))
+                            if (InBounds(y + 1, x + 1, trackArray) && 
+                                (trackArray[y + 1][x + 1].Contains("\\") ||
+                                 trackArray[y + 1][x + 1].Contains("S") ||
+                                 trackArray[y + 1][x + 1].Contains("X")))
                             {
                                 dir = Direction.DownRight;
                                 x++;
                                 y++;
                             }
-                            else if (InBounds(y + 1, x, trackArray) && trackArray[y + 1][x].Contains("|"))
+                            else if (InBounds(y + 1, x, trackArray) && 
+                                (trackArray[y + 1][x].Contains("|") ||
+                                 trackArray[y + 1][x].Contains("+") ||
+                                 trackArray[y + 1][x].Contains("S")))
                             {
                                 dir = Direction.Down;
                                 y++;
@@ -149,16 +155,22 @@ namespace Codewars.Solutions.Tasks
                         }
                         else if (dir == Direction.Up || dir == Direction.UpLeft)
                         {
-                            if (InBounds(y + 1, x + 1, trackArray) && trackArray[y + 1][x + 1].Contains("\\"))
+                            if (InBounds(y - 1, x - 1, trackArray) && 
+                                (trackArray[y - 1][x - 1].Contains("\\") ||
+                                 trackArray[y - 1][x - 1].Contains("S") ||
+                                 trackArray[y - 1][x - 1].Contains("X")))
                             {
-                                dir = Direction.DownRight;
-                                x++;
-                                y++;
+                                dir = Direction.UpLeft;
+                                x--;
+                                y--;
                             }
-                            else if (InBounds(y - 1, x, trackArray) && trackArray[y - 1][x].Contains("|"))
+                            else if (InBounds(y - 1, x, trackArray) &&
+                               (trackArray[y - 1][x].Contains("|") ||
+                                trackArray[y - 1][x].Contains("S") ||
+                                trackArray[y - 1][x].Contains("+")))
                             {
                                 dir = Direction.Up;
-                                y++;
+                                y--;
                             }
                             else
                             {
@@ -186,13 +198,19 @@ namespace Codewars.Solutions.Tasks
                         }
                         else if (dir == Direction.Down || dir == Direction.DownLeft)
                         {
-                            if (InBounds(y + 1, x - 1, trackArray) && trackArray[y + 1][x - 1].Contains("/"))
+                            if (InBounds(y + 1, x - 1, trackArray) &&
+                                (trackArray[y + 1][x - 1].Contains("/") ||
+                                 trackArray[y + 1][x - 1].Contains("X") ||
+                                 trackArray[y + 1][x - 1].Contains("S")))
                             {
                                 dir = Direction.DownLeft;
                                 x--;
                                 y++;
                             }
-                            else if(InBounds(y + 1, x, trackArray) && trackArray[y + 1][x].Contains("|"))
+                            else if(InBounds(y + 1, x, trackArray) && 
+                                (trackArray[y + 1][x].Contains("|") ||
+                                 trackArray[y + 1][x].Contains("+") ||
+                                 trackArray[y + 1][x].Contains("S")))
                             {
                                 dir = Direction.Down;
                                 y++;
@@ -205,13 +223,19 @@ namespace Codewars.Solutions.Tasks
                         }
                         else if (dir == Direction.Up || dir == Direction.UpRight)
                         {
-                            if (InBounds(y - 1, x + 1, trackArray) && trackArray[y - 1][x + 1].Contains("/"))
+                            if (InBounds(y - 1, x + 1, trackArray) && 
+                                (trackArray[y - 1][x + 1].Contains("/") ||
+                                 trackArray[y - 1][x + 1].Contains("X") ||
+                                 trackArray[y - 1][x + 1].Contains("S")))
                             {
                                 dir = Direction.UpRight;
                                 x++;
                                 y--;
                             }
-                            else if (InBounds(y - 1, x, trackArray) && trackArray[y - 1][x].Contains("|"))
+                            else if (InBounds(y - 1, x, trackArray) && 
+                                (trackArray[y - 1][x].Contains("|") ||
+                                 trackArray[y - 1][x].Contains("+") ||
+                                 trackArray[y - 1][x].Contains("S")))
                             {
                                 dir = Direction.Up;
                                 y--;
@@ -299,21 +323,21 @@ namespace Codewars.Solutions.Tasks
                         continue;
                 }
 
-                if (count == aPos)
-                    current = "A" + current;
+                //if (count == aPos)
+                //    current = "A" + current;
 
-                if (count == bPos)
-                    current = "B" + current;
+                //if (count == bPos)
+                //    current = "B" + current;
 
                 if (start == (-1, -1))
                     start = snap;
 
-                if (start == (y, x))
-                    traverse = false;
-
-                count++;
+                //count++;
                 last = current;
                 traversedTrack.Add(current);
+
+                if (start == (y, x))
+                    traverse = false;
             }
 
             return traversedTrack.ToArray();
@@ -321,27 +345,27 @@ namespace Codewars.Solutions.Tasks
 
         private static bool InBounds(int y, int x, List<string[]> track)
         {
-            if (track.Count() <= y || track[y].Length <= x)
+            if (track.Count() <= y || y < 0 || track[y].Length <= x || x < 0)
                 return false;
 
             return true;
         }
 
-        private static void OverwriteStartingPos(string[] parsedTrack, Train trainA, Train trainB) 
-        {
-            for (int i = 0; i < parsedTrack.Length; i++)
-            {
-                if (parsedTrack[i].Length == 2) 
-                {
-                    if (parsedTrack[i].Contains("A"))
-                        trainA.OverwritePosition(i);
-                    if (parsedTrack[i].Contains("B"))
-                        trainB.OverwritePosition(i);
+        //private static void OverwriteStartingPos(string[] parsedTrack, Train trainA, Train trainB) 
+        //{
+        //    for (int i = 0; i < parsedTrack.Length; i++)
+        //    {
+        //        if (parsedTrack[i].Length == 2) 
+        //        {
+        //            if (parsedTrack[i].Contains("A"))
+        //                trainA.OverwritePosition(i);
+        //            if (parsedTrack[i].Contains("B"))
+        //                trainB.OverwritePosition(i);
                     
-                    parsedTrack[i] = parsedTrack[i].Substring(1);
-                }
-            }
-        }
+        //            parsedTrack[i] = parsedTrack[i].Substring(1);
+        //        }
+        //    }
+        //}
 
         private static void MoveTurn(string[] parsedTrack, Train train) 
         {
@@ -368,17 +392,19 @@ namespace Codewars.Solutions.Tasks
             private bool _isExpress;
             private int _trackCount;
 
-            public Train(string layout, int trackCount) 
+            public Train(string layout, int trackCount, int position) 
             {
                 _layout = layout;
                 _direction = !char.IsUpper(layout[0]);
                 _trackCount = trackCount;
+                _isExpress = layout.Contains("X");
+                _position = position;
             }
 
-            public void OverwritePosition(int pos) 
-            {
-                _position = pos;
-            }
+            //public void OverwritePosition(int pos) 
+            //{
+            //    _position = pos;
+            //}
 
             public void Move() 
             {
