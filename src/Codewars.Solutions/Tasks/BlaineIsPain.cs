@@ -15,35 +15,47 @@ namespace Codewars.Solutions.Tasks
 
         public string Run()
         {
+            var simple = @" 
+                        /---\
+                        |   |
+                        |   S
+                        |   |
+                        \-S-/";
+            var a = "Aaa";
+            var b = "Bbb";
+            var aPos = 2;
+            var bPos = 5;
+            var lim = 1000;
+
             var track = @"                                
-                                /------------\
-/-------------\                /             |
-|             |               /              S
-|             |              /               |
+                                /------------\             
+/-------------\                /             |             
+|             |               /              S             
+|             |              /               |             
 |        /----+--------------+------\        |
-\       /     |              |      |        |      
- \      |     \              |      |        |
- |      |      \-------------+------+--------+---\            
- |      |                    |      |        |   |
- \------+------S-------------+------/        /   |
-        |                    |              /    |
-        \--------------------+-------------/     |
-                             |                   |
-/-------------\              |                   |        
-|             |              |             /-----+----\      
-|             |              |             |     |     \    
-\-------------+--------------+-----S-------+-----/      \   
-              |              |             |             \
-              |              |             |             |
-              |              \-------------+-------------/
-              |                            |
-              \----------------------------/";
+\       /     |              |      |        |             
+ \      |     \              |      |        |             
+ |      |      \-------------+------+--------+---\         
+ |      |                    |      |        |   |         
+ \------+--------------------+------/        /   |         
+        |                    |              /    |         
+        \------S-------------+-------------/     |         
+                             |                   |         
+/-------------\              |                   |         
+|             |              |             /-----+----\    
+|             |              |             |     |     \   
+\-------------+--------------+-----S-------+-----/      \  
+              |              |             |             \ 
+              |              |             |             | 
+              |              \-------------+-------------/ 
+              |                            |               
+              \----------------------------/  ";
 
             var aTrain = "Aaaa";
             var aTrainPos = 147;
-            var bTrain = "bbbbbbbbbbB";
+            var bTrain = "Bbbbbbbbbbb";
             var bTrainPos = 288;
-            var limit = 2000;
+            var limit = 5000;
 
             var result = TrainCrash(track, aTrain, aTrainPos, bTrain, bTrainPos, limit);
             return $"TrainCrash() -> {result} \n";
@@ -52,20 +64,21 @@ namespace Codewars.Solutions.Tasks
         public static int TrainCrash(string track, string aTrain,
          int aTrainPos, string bTrain, int bTrainPos, int limit)
         {
-            var parsedTrack = ParseTrack(track, aTrainPos, bTrainPos);
-            
+            var parsedTrack = ParseTrack(track);
+
             var turns = 0;
+
             var trainA = new Train(aTrain, parsedTrack.Length, aTrainPos);
             var trainB = new Train(bTrain, parsedTrack.Length, bTrainPos);
-            //OverwriteStartingPos(parsedTrack, trainA, trainB);
 
             if (trainA.HasCollidedWith(trainB))
                 return 0;
 
             while (turns != limit) 
             {
-                MoveTurn(parsedTrack, trainA);
-                MoveTurn(parsedTrack, trainB);
+                trainA.Move(parsedTrack[trainA._position] == "S");
+                trainB.Move(parsedTrack[trainB._position] == "S");
+
                 turns++;
 
                 if (trainA.HasCollidedWith(trainB))
@@ -75,14 +88,13 @@ namespace Codewars.Solutions.Tasks
             return -1;
         }
 
-        private static string[] ParseTrack(string track, int aPos, int bPos) 
+        private static string[] ParseTrack(string track) 
         {
             var trackArray = new List<string[]>();
 
             foreach (var line in track.Split(System.Environment.NewLine))
-                trackArray.Add(line.Select(x => x.ToString()).ToArray());
+                trackArray.Add(line.Select(l => l.ToString()).ToArray());
 
-            //var count = 0;
             var x = 0;
             var y = 0;
             var dir = Direction.Right;
@@ -118,17 +130,7 @@ namespace Codewars.Solutions.Tasks
                             dir = Direction.Down;
                             y++;
                         }
-                        else if (dir == Direction.Right)
-                        {
-                            dir = Direction.Down;
-                            y++;
-                        }
-                        else if (dir == Direction.Left)
-                        {
-                            dir = Direction.Up;
-                            y--;
-                        }
-                        else if (dir == Direction.Down || dir == Direction.DownRight)
+                        else if (dir == Direction.Down || dir == Direction.DownRight || dir == Direction.Right)
                         {
                             if (InBounds(y + 1, x + 1, trackArray) && 
                                 (trackArray[y + 1][x + 1].Contains("\\") ||
@@ -153,7 +155,7 @@ namespace Codewars.Solutions.Tasks
                                 x++;
                             }
                         }
-                        else if (dir == Direction.Up || dir == Direction.UpLeft)
+                        else if (dir == Direction.Up || dir == Direction.UpLeft || dir == Direction.Left)
                         {
                             if (InBounds(y - 1, x - 1, trackArray) && 
                                 (trackArray[y - 1][x - 1].Contains("\\") ||
@@ -186,17 +188,7 @@ namespace Codewars.Solutions.Tasks
                             dir = Direction.Right;
                             x++;
                         }
-                        else if (dir == Direction.Right)
-                        {
-                            dir = Direction.Up;                            
-                            y--;
-                        }
-                        else if (dir == Direction.Left)
-                        {
-                            dir = Direction.Down;
-                            y++;
-                        }
-                        else if (dir == Direction.Down || dir == Direction.DownLeft)
+                        else if (dir == Direction.Down || dir == Direction.DownLeft || dir == Direction.Left)
                         {
                             if (InBounds(y + 1, x - 1, trackArray) &&
                                 (trackArray[y + 1][x - 1].Contains("/") ||
@@ -221,7 +213,7 @@ namespace Codewars.Solutions.Tasks
                                 x--;
                             }
                         }
-                        else if (dir == Direction.Up || dir == Direction.UpRight)
+                        else if (dir == Direction.Up || dir == Direction.UpRight || dir == Direction.Right)
                         {
                             if (InBounds(y - 1, x + 1, trackArray) && 
                                 (trackArray[y - 1][x + 1].Contains("/") ||
@@ -323,16 +315,9 @@ namespace Codewars.Solutions.Tasks
                         continue;
                 }
 
-                //if (count == aPos)
-                //    current = "A" + current;
-
-                //if (count == bPos)
-                //    current = "B" + current;
-
                 if (start == (-1, -1))
                     start = snap;
 
-                //count++;
                 last = current;
                 traversedTrack.Add(current);
 
@@ -350,33 +335,6 @@ namespace Codewars.Solutions.Tasks
 
             return true;
         }
-
-        //private static void OverwriteStartingPos(string[] parsedTrack, Train trainA, Train trainB) 
-        //{
-        //    for (int i = 0; i < parsedTrack.Length; i++)
-        //    {
-        //        if (parsedTrack[i].Length == 2) 
-        //        {
-        //            if (parsedTrack[i].Contains("A"))
-        //                trainA.OverwritePosition(i);
-        //            if (parsedTrack[i].Contains("B"))
-        //                trainB.OverwritePosition(i);
-                    
-        //            parsedTrack[i] = parsedTrack[i].Substring(1);
-        //        }
-        //    }
-        //}
-
-        private static void MoveTurn(string[] parsedTrack, Train train) 
-        {
-            if (train.IsStoppedAtStation())
-                return;
-            
-            train.Move();
-
-            if (parsedTrack[train._position] == "S") 
-                train.ReachStation();
-        }
         
         public enum Direction
         {
@@ -386,29 +344,33 @@ namespace Codewars.Solutions.Tasks
         public class Train 
         {
             public string _layout;
-            public bool _direction;
+            public bool _clockwise;
             public int _position;
             public int _stationTimeLeft;
             private bool _isExpress;
             private int _trackCount;
+            private bool _readyToStop;
 
             public Train(string layout, int trackCount, int position) 
             {
                 _layout = layout;
-                _direction = !char.IsUpper(layout[0]);
+                _clockwise = !char.IsUpper(layout[0]);
                 _trackCount = trackCount;
                 _isExpress = layout.Contains("X");
                 _position = position;
             }
 
-            //public void OverwritePosition(int pos) 
-            //{
-            //    _position = pos;
-            //}
-
-            public void Move() 
+            public void Move(bool station) 
             {
-                if (_direction) 
+                if (station)
+                    ReachStation();
+
+                if (IsStoppedAtStation())
+                    return;
+
+                _readyToStop = true;
+
+                if (_clockwise) 
                 {
                     _position++;            
 
@@ -422,20 +384,24 @@ namespace Codewars.Solutions.Tasks
                     if (_position == -1)
                         _position = _trackCount - 1;
                 }
+
             }
 
             public void ReachStation() 
             {
-                if (!_isExpress) 
-                    _stationTimeLeft = _layout.Length;
+                if (!_isExpress && _stationTimeLeft == 0 && _readyToStop) 
+                    _stationTimeLeft = _layout.Length - 1;
             }
 
-            public bool IsStoppedAtStation() 
-            {
-                var isStopped = _stationTimeLeft == 0;
-                _stationTimeLeft--;
+            private bool IsStoppedAtStation() 
+            {                
+                if (_stationTimeLeft > 0)
+                    _stationTimeLeft--;
 
-                return isStopped;
+                if (_stationTimeLeft == 0)
+                    _readyToStop = false;
+                
+                return _stationTimeLeft > 0;
             }
 
             public int[] TakesUpPositions() 
@@ -447,7 +413,7 @@ namespace Codewars.Solutions.Tasks
                 {
                     positions[i] = cur;
 
-                    if (_direction) 
+                    if (_clockwise) 
                     {
                         cur--;
 
