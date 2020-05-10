@@ -69,13 +69,6 @@ namespace Codewars.Solutions.Tasks
         public static int TrainCrash(string track, string aTrain,
          int aTrainPos, string bTrain, int bTrainPos, int limit)
         {
-            System.Console.WriteLine(track);
-            System.Console.WriteLine(aTrain);
-            System.Console.WriteLine(aTrainPos);
-            System.Console.WriteLine(bTrain);
-            System.Console.WriteLine(bTrainPos);
-            System.Console.WriteLine(limit);
-
             var parsedTrack = ParseTrack(track);
             var trainA = new Train(aTrain, parsedTrack.Length, aTrainPos);
             var trainB = new Train(bTrain, parsedTrack.Length, bTrainPos);
