@@ -15,80 +15,90 @@ namespace Codewars.Solutions.Tasks
 
         public string Run()
         {
-            var simple = @" 
-                        /---\
-                        |   |
-                        |   S
-                        |   |
-                        \-S-/";
-            var a = "Aaa";
-            var b = "Bbb";
-            var aPos = 2;
-            var bPos = 5;
-            var lim = 1000;
-
             var track = @"                                
-                                /------------\             
-/-------------\                /             |             
-|             |               /              S             
-|             |              /               |             
-|        /----+--------------+------\        |
-\       /     |              |      |        |             
- \      |     \              |      |        |             
- |      |      \-------------+------+--------+---\         
- |      |                    |      |        |   |         
- \------+--------------------+------/        /   |         
-        |                    |              /    |         
-        \------S-------------+-------------/     |         
-                             |                   |         
-/-------------\              |                   |         
-|             |              |             /-----+----\    
-|             |              |             |     |     \   
-\-------------+--------------+-----S-------+-----/      \  
-              |              |             |             \ 
-              |              |             |             | 
-              |              \-------------+-------------/ 
-              |                            |               
-              \----------------------------/  ";
+                                            /------------\             
+            /-------------\                /             |             
+            |             |               /              S             
+            |             |              /               |             
+            |        /----+--------------+------\        |
+            \       /     |              |      |        |             
+             \      |     \              |      |        |             
+             |      |      \-------------+------+--------+---\         
+             |      |                    |      |        |   |         
+             \------+--------------------+------/        /   |         
+                    |                    |              /    |         
+                    \------S-------------+-------------/     |         
+                                         |                   |         
+            /-------------\              |                   |         
+            |             |              |             /-----+----\    
+            |             |              |             |     |     \   
+            \-------------+--------------+-----S-------+-----/      \  
+                          |              |             |             \ 
+                          |              |             |             | 
+                          |              \-------------+-------------/ 
+                          |                            |               
+                          \----------------------------/               ";
 
-            var aTrain = "Aaaa";
-            var aTrainPos = 147;
-            var bTrain = "Bbbbbbbbbbb";
-            var bTrainPos = 288;
-            var limit = 5000;
+            var a = "Aaaa";
+            var aPos = 147;
+            var b = "Bbbbbbbbbbb";
+            var bPos = 288;
+            var limit = 1000;
 
-            var result = TrainCrash(track, aTrain, aTrainPos, bTrain, bTrainPos, limit);
+            //var track = @" 
+            ///-------\ 
+            //|       | 
+            //|       | 
+            //|       | 
+            //\-------+--------\
+            //        |        |
+            //        S        |
+            //        |        |
+            //        \--------/";
+
+            //var a = "aaaA";
+            //var aPos = 22;
+            //var b = "bbbbB";
+            //var bPos = 0;
+            //var limit = 100;
+
+            var result = TrainCrash(track, a, aPos, b, bPos, limit);
             return $"TrainCrash() -> {result} \n";
         }
 
         public static int TrainCrash(string track, string aTrain,
          int aTrainPos, string bTrain, int bTrainPos, int limit)
         {
+            System.Console.WriteLine(track);
+            System.Console.WriteLine(aTrain);
+            System.Console.WriteLine(aTrainPos);
+            System.Console.WriteLine(bTrain);
+            System.Console.WriteLine(bTrainPos);
+            System.Console.WriteLine(limit);
+
             var parsedTrack = ParseTrack(track);
-
-            var turns = 0;
-
             var trainA = new Train(aTrain, parsedTrack.Length, aTrainPos);
             var trainB = new Train(bTrain, parsedTrack.Length, bTrainPos);
+            var turns = 0;
 
-            if (trainA.HasCollidedWith(trainB))
-                return 0;
+            if (trainA.HasCrashed(trainB, parsedTrack))
+                return turns;
 
-            while (turns != limit) 
+            while (turns != limit)
             {
-                trainA.Move(parsedTrack[trainA._position] == "S");
-                trainB.Move(parsedTrack[trainB._position] == "S");
-
                 turns++;
 
-                if (trainA.HasCollidedWith(trainB))
+                trainA.Move(parsedTrack[trainA._position].IsStation);
+                trainB.Move(parsedTrack[trainB._position].IsStation);
+
+                if (trainA.HasCrashed(trainB, parsedTrack))
                     return turns;
             }
 
             return -1;
         }
 
-        private static string[] ParseTrack(string track) 
+        private static (int Position, bool IsStation)[] ParseTrack(string track) 
         {
             var trackArray = new List<string[]>();
 
@@ -100,8 +110,10 @@ namespace Codewars.Solutions.Tasks
             var dir = Direction.Right;
             var traverse = true;
             var start = (-1, -1);
-            var last = "";
-            var traversedTrack = new List<string>();
+            var count = 0;
+
+            var trackPositions = new Dictionary<(int, int), int>();
+            var traversedTrack = new List<(int, bool)>();
 
             while(traverse)
             {
@@ -318,8 +330,16 @@ namespace Codewars.Solutions.Tasks
                 if (start == (-1, -1))
                     start = snap;
 
-                last = current;
-                traversedTrack.Add(current);
+                var isStation = current.Contains("S");
+               
+                if (trackPositions.TryGetValue(snap, out var value))
+                    traversedTrack.Add((value, isStation));
+                else
+                {
+                    trackPositions.Add(snap, count);
+                    traversedTrack.Add((count, isStation));
+                    count++;
+                }
 
                 if (start == (y, x))
                     traverse = false;
@@ -349,7 +369,7 @@ namespace Codewars.Solutions.Tasks
             public int _stationTimeLeft;
             private bool _isExpress;
             private int _trackCount;
-            private bool _readyToStop;
+            private bool _departFromStation;
 
             public Train(string layout, int trackCount, int position) 
             {
@@ -358,17 +378,21 @@ namespace Codewars.Solutions.Tasks
                 _trackCount = trackCount;
                 _isExpress = layout.Contains("X");
                 _position = position;
+                _departFromStation = true;
             }
 
             public void Move(bool station) 
             {
-                if (station)
-                    ReachStation();
+                if (!_departFromStation)
+                {
+                    if (station)
+                        ReachStation();
 
-                if (IsStoppedAtStation())
-                    return;
+                    if (IsStoppedAtStation())
+                        return;
+                }
 
-                _readyToStop = true;
+                _departFromStation = false;
 
                 if (_clockwise) 
                 {
@@ -389,29 +413,26 @@ namespace Codewars.Solutions.Tasks
 
             public void ReachStation() 
             {
-                if (!_isExpress && _stationTimeLeft == 0 && _readyToStop) 
-                    _stationTimeLeft = _layout.Length - 1;
+                if (!_isExpress && _stationTimeLeft == 0) 
+                    _stationTimeLeft = _layout.Length;
             }
 
             private bool IsStoppedAtStation() 
-            {                
-                if (_stationTimeLeft > 0)
-                    _stationTimeLeft--;
-
+            {
                 if (_stationTimeLeft == 0)
-                    _readyToStop = false;
-                
-                return _stationTimeLeft > 0;
+                    return false;
+
+                return --_stationTimeLeft > 0;
             }
 
-            public int[] TakesUpPositions() 
+            public int[] TakesUpPositions((int Position, bool IsStation)[] parsedTrack) 
             {
                 var positions = new int[_layout.Length];
                 var cur = _position;
 
                 for (int i = 0; i < positions.Length; i++)
                 {
-                    positions[i] = cur;
+                    positions[i] = parsedTrack[cur].Position;
 
                     if (_clockwise) 
                     {
@@ -432,9 +453,21 @@ namespace Codewars.Solutions.Tasks
                 return positions;
             }
 
-            public bool HasCollidedWith(Train other) 
+            public bool HasCrashed(Train other, (int Position, bool IsStation)[] parsedTrack) 
             {
-                return TakesUpPositions().Intersect(other.TakesUpPositions()).Any();
+                var positions = TakesUpPositions(parsedTrack);
+                var otherPositions = other.TakesUpPositions(parsedTrack);
+
+                if (positions.GroupBy(x => x).Any(x => x.Count() > 1))
+                    return true;
+
+                if (otherPositions.GroupBy(x => x).Any(x => x.Count() > 1))
+                    return true;
+
+                if (positions.Intersect(otherPositions).Any())
+                    return true;
+
+                return positions.Intersect(otherPositions).Any();
             }
         }
     }
