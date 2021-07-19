@@ -22,7 +22,7 @@ namespace Codewars.Solutions
 
         static void RunWorkspace()
         {
-            var task = new MakeASpiral();
+            var task = new AssemblerInterpreterPart2();
 
             Console.WriteLine($"Workspace --> {task.Name} : {task.Rank}\n");
             Console.WriteLine("Result: \n" + task.Run());
